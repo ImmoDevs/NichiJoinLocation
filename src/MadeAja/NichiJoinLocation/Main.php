@@ -2,28 +2,24 @@
 
 namespace MadeAja\NichiJoinLocation;
 
-
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\SingletonTrait;
 
 class Main extends PluginBase implements Listener
 {
-    public array $config;
+    use SingletonTrait;
 
-    private static Main $instance;
+    public array $config;
 
     /** onEnable */
     protected function onEnable() : void
     {
-        self::$instance = $this;
+        self::setInstance($this);
         $this->saveDefaultConfig();
         $this->config = $this->getConfig()->getAll();
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
-    }
-
-    public static function getInstance() : self {
-        return self::$instance;
     }
 
     /** Event onJoin */
@@ -40,5 +36,4 @@ class Main extends PluginBase implements Listener
         $message = str_replace(["{player}", "{region}", "{city}", "&"], [$name, $region, $city, "§"], $this->config["prefix"]);
         $this->getServer()->broadcastMessage($message);
     }
-
 }
